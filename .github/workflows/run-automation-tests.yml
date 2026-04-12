@@ -1,29 +1,3 @@
-# ============================================================================
-# automation-repo / .github/workflows/run-automation-tests.yml
-#
-# PURPOSE:
-#   Listens for the 'run-automation-tests' repository_dispatch event
-#   sent by the application repo after a successful deployment.
-#
-#   Reads the dispatch payload (env, app_url, browser, build_number,
-#   triggered_by) and injects them into the Maven test run as system
-#   properties, so tests know which environment and URL to target.
-#
-#   After tests complete (pass or fail):
-#     - Allure report is generated
-#     - Test results + Allure report uploaded as GitHub Actions artifacts
-#     - A summary is written to the Actions job summary page
-#
-# ALSO SUPPORTS:
-#   - workflow_dispatch  : manual run from the Actions UI (for ad-hoc testing)
-#   - pull_request       : runs against a default/local URL (for PR validation)
-#
-# SECRETS REQUIRED (set in automation-repo Settings → Secrets):
-#   None required for the automation repo itself.
-#   (The dispatch comes from the app repo using the app repo's secrets.)
-#
-# ============================================================================
-
 name: Run Automation Tests
 
 on:
@@ -63,6 +37,9 @@ on:
     branches:
       - main
       - develop
+
+permissions:
+  contents: write
 
 # Prevent redundant parallel runs of the automation suite
 concurrency:
@@ -229,6 +206,15 @@ jobs:
 
           echo "Allure report generated at: target/allure-report"
 
+      # ── 6.1 PUBLISH ALLURE TO GITHUB PAGES ───────────────────────────────
+      - name: Publish Allure report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: target/allure-report
+          destination_dir: allure-report/${{ steps.params.outputs.build_number }}
+
       # ── 7. UPLOAD TEST RESULTS ────────────────────────────────────────────
       - name: Upload Allure results (raw)
         uses: actions/upload-artifact@v4
@@ -261,6 +247,7 @@ jobs:
         if: always()
         run: |
           SUMMARY_FILE="$GITHUB_STEP_SUMMARY"
+          ALLURE_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure-report/${{ steps.params.outputs.build_number }}/index.html"
 
           echo "## 🧪 Automation Test Results" >> "$SUMMARY_FILE"
           echo "" >> "$SUMMARY_FILE"
@@ -308,6 +295,9 @@ jobs:
             echo "### ❌ Overall: FAILED" >> "$SUMMARY_FILE"
           fi
 
+          echo "" >> "$SUMMARY_FILE"
+          echo "### 📊 Allure Report" >> "$SUMMARY_FILE"
+          echo "[🔗 View Allure Report](${ALLURE_URL})" >> "$SUMMARY_FILE"
           echo "" >> "$SUMMARY_FILE"
           echo "> 📥 Download **allure-report-build-${{ steps.params.outputs.build_number }}** artifact for the full interactive Allure report." >> "$SUMMARY_FILE"
 

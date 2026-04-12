@@ -48,9 +48,13 @@ public class DriverManager {
         String browser  = ConfigManager.getBrowser();
         boolean headless = ConfigManager.isHeadless();
 
-        LOG.info("Initialising [{}] driver | headless={} | env={} | build={}",
-                browser, headless, ConfigManager.getEnv(), ConfigManager.getBuildNumber());
-
+        LOG.info("Initialising [{}] driver | headless={} | env={} | build={} | thread={} | os={}",
+                browser,
+                headless,
+                ConfigManager.getEnv(),
+                ConfigManager.getBuildNumber(),
+                Thread.currentThread().getId(),
+                System.getProperty("os.name"));
         WebDriver driver;
         switch (browser) {
             case "firefox":
@@ -67,7 +71,9 @@ public class DriverManager {
 
         // Apply timeouts
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(ConfigManager.getPageLoadTimeout()));
-        driver.manage().window().maximize();
+        if (!headless) {
+            driver.manage().window().maximize();
+        }
 
         DRIVER_THREAD_LOCAL.set(driver);
         LOG.info("WebDriver initialised successfully for thread [{}]", Thread.currentThread().getId());
@@ -138,7 +144,7 @@ public class DriverManager {
      */
     private static void applyCommonFlags(org.openqa.selenium.chromium.ChromiumOptions<?> opts, boolean headless) {
         if (headless) {
-            opts.addArguments("--headless=new");  // Chromium headless v2 (more stable)
+            opts.addArguments("--headless=new");
         }
         opts.addArguments(
             "--no-sandbox",
@@ -146,7 +152,8 @@ public class DriverManager {
             "--window-size=1920,1080",
             "--disable-gpu",
             "--disable-extensions",
-            "--remote-allow-origins=*"
+            "--remote-allow-origins=*",
+            "--remote-debugging-port=9222" // 🔥 CRITICAL FIX
         );
     }
 }

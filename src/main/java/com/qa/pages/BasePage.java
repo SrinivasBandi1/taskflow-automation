@@ -1,8 +1,5 @@
 package com.qa.pages;
 
-import com.qa.utils.DriverManager;
-import com.qa.utils.WaitHelper;
-import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -10,6 +7,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.qa.utils.DriverManager;
+import com.qa.utils.WaitHelper;
+
+import io.qameta.allure.Step;
 
 /**
  * BasePage

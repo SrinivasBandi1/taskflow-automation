@@ -14,36 +14,36 @@
 -->
 
 <suite name="TaskFlow Pro – Full Regression Suite"
-       verbose="1"
-       thread-count="1"
-       parallel="none">
+	verbose="1"
+	thread-count="1"
+	parallel="none">
 
-  <!-- ===== Suite-level parameters (overridden by Maven -D flags) ===== -->
-  <parameter name="browser"  value="chrome"/>
-  <parameter name="headless" value="true"/>
+	<!-- ===== Suite-level parameters (overridden by Maven -D flags) ===== -->
+	<parameter name="browser" value="chrome" />
+	<parameter name="headless" value="true" />
 
-  <!-- ===== Test Group: Page Structure & Stats ===== -->
-  <test name="Header and Statistics Tests">
-    <classes>
-      <class name="com.qa.tests.TaskFlowHeaderAndStatsTest"/>
-    </classes>
-  </test>
+	<!-- ===== Test Group: Page Structure & Stats ===== -->
+	<test name="Header and Statistics Tests">
+		<classes>
+			<class name="com.qa.tests.TaskFlowHeaderAndStatsTest" />
+		</classes>
+	</test>
 
-  <!-- ===== Test Group: Add Task Form ===== -->
-  <test name="Add Task Form Tests">
+	<!-- ===== Test Group: Add Task Form ===== -->
+	<!--  <test name="Add Task Form Tests">
     <classes>
       <class name="com.qa.tests.TaskFlowAddTaskTest"/>
     </classes>
   </test>
 
-  <!-- ===== Test Group: Activity Feed ===== -->
+   ===== Test Group: Activity Feed ===== 
   <test name="Activity Feed Tests">
     <classes>
       <class name="com.qa.tests.TaskFlowActivityFeedTest"/>
     </classes>
-  </test>
+  </test>-->
 
-  <!--
+	<!--
     NOTE: To enable parallel test execution, change:
       parallel="tests"  thread-count="3"
     Each <test> block will run in its own thread.

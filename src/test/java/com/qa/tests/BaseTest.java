@@ -132,11 +132,15 @@ public abstract class BaseTest {
     /* ------------------------------------------------------------------ */
 
     private static String statusLabel(int status) {
-        return switch (status) {
-            case ITestResult.SUCCESS -> "PASSED";
-            case ITestResult.FAILURE -> "FAILED";
-            case ITestResult.SKIP    -> "SKIPPED";
-            default                  -> "UNKNOWN";
-        };
+        switch (status) {
+            case ITestResult.SUCCESS:
+                return "PASSED";
+            case ITestResult.FAILURE:
+                return "FAILED";
+            case ITestResult.SKIP:
+                return "SKIPPED";
+            default:
+                return "UNKNOWN";
+        }
     }
 }

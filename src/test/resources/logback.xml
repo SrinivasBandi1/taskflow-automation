@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  logback.xml
+  Provides clean, readable log output in both CI (GitHub Actions) and local runs.
+  - com.qa  → DEBUG (see every Page Object action)
+  - Selenium/WDM noise suppressed to WARN
+-->
+<configuration>
+
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %-40logger{40} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <!-- Our automation framework — show DEBUG and above -->
+  <logger name="com.qa" level="DEBUG" additivity="false">
+    <appender-ref ref="CONSOLE"/>
+  </logger>
+
+  <!-- Suppress noisy third-party libraries -->
+  <logger name="org.openqa.selenium"           level="WARN"/>
+  <logger name="io.github.bonigarcia"          level="WARN"/>
+  <logger name="org.apache"                    level="WARN"/>
+  <logger name="io.qameta.allure"              level="WARN"/>
+  <logger name="org.testng"                    level="INFO"/>
+
+  <root level="WARN">
+    <appender-ref ref="CONSOLE"/>
+  </root>
+
+</configuration>

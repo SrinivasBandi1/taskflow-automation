@@ -66,13 +66,13 @@ public abstract class BaseTest {
     /*  Test-level lifecycle                                                */
     /* ------------------------------------------------------------------ */
 
-    @BeforeMethod(alwaysRun = true)
+       //     @BeforeMethod(alwaysRun = true)
     public void setUp(java.lang.reflect.Method method) {
         LOG.info("---> Starting test: {}", method.getName());
         DriverManager.initDriver();
     }
 
-    @AfterMethod(alwaysRun = true)
+        //    @AfterMethod(alwaysRun = true)
     public void tearDown(ITestResult result) {
         if (result.getStatus() == ITestResult.FAILURE) {
             LOG.error("TEST FAILED: {} — capturing screenshot", result.getName());

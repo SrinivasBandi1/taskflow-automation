@@ -15,7 +15,7 @@ import java.time.Duration;
 public class BaseTest {
     protected WebDriver driver;
 
-    @BeforeClass
+          //  @BeforeClass
     public void setUp() {
         String browser = System.getProperty("browser", "chrome");
         String appUrl = "https://srinivasbandi1.github.io/app-repo/";
@@ -33,7 +33,7 @@ public class BaseTest {
         driver.get(appUrl);
     }
 
-    @AfterClass
+         //   @AfterClass
     public void tearDown() {
         if (driver != null) {
             driver.quit();

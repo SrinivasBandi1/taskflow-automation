@@ -115,15 +115,21 @@ public class DriverManager {
     /*  Private factory methods                                             */
     /* ------------------------------------------------------------------ */
 
-    private static ChromeDriver createChromeDriver(boolean headless) {
-WebDriverManager.chromedriver()
-        .browserVersion("146")
-        .setup();        ChromeOptions opts = new ChromeOptions();
-        applyCommonFlags(opts, headless);
-        opts.addArguments("--disable-blink-features=AutomationControlled");
-        opts.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
-        return new ChromeDriver(opts);
-    }
+   private static ChromeDriver createChromeDriver(boolean headless) {
+
+    String driverPath = WebDriverManager.chromedriver()
+            .browserVersion("146")
+            .setup();
+
+    System.setProperty("webdriver.chrome.driver", driverPath);
+
+    ChromeOptions opts = new ChromeOptions();
+    applyCommonFlags(opts, headless);
+    opts.addArguments("--disable-blink-features=AutomationControlled");
+    opts.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+
+    return new ChromeDriver(opts);
+}
 
     private static FirefoxDriver createFirefoxDriver(boolean headless) {
         WebDriverManager.firefoxdriver().setup();

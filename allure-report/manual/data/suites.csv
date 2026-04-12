@@ -1,48 +1,68 @@
 "Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"skipped","Sun Apr 12 19:16:32 UTC 2026","Sun Apr 12 19:16:32 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowHeaderAndStatsTest","com.qa.tests.TaskFlowHeaderAndStatsTest","tc03_verifyLoggedInUser","TC-03: Verify the logged-in username is shown in the header user pill","Checks:
+"broken","Sun Apr 12 19:18:44 UTC 2026","Sun Apr 12 19:18:44 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowHeaderAndStatsTest","com.qa.tests.TaskFlowHeaderAndStatsTest","openApplication","openApplication",""
+"skipped","Sun Apr 12 19:18:44 UTC 2026","Sun Apr 12 19:18:44 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowHeaderAndStatsTest","com.qa.tests.TaskFlowHeaderAndStatsTest","tc05_verifyNavigationLinks","TC-05: Verify all primary navigation links are present in the header","Verifies that Dashboard, My Tasks, and Reports navigation links
+are rendered in the top navigation bar.
+"
+"skipped","Sun Apr 12 19:18:41 UTC 2026","Sun Apr 12 19:18:41 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowActivityFeedTest","com.qa.tests.TaskFlowActivityFeedTest","tc12_activityFeed_showsPreSeededItems","TC-12: Verify the activity feed renders with at least 3 pre-seeded activity entries","Steps:
+ 1. Scroll to the activity feed section
+ 2. Verify the section container is visible
+ 3. Verify there are at least 3 activity items (matching seeded data)
+ 4. Verify the first item's text is non-empty
+"
+"skipped","Sun Apr 12 19:18:43 UTC 2026","Sun Apr 12 19:18:43 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowHeaderAndStatsTest","com.qa.tests.TaskFlowHeaderAndStatsTest","tc02_verifyHeaderAndLogo","TC-02: Verify the site header is rendered and the logo is visible","Checks:
+ 1. The site-header element is present in the DOM
+ 2. The logo text contains the product name
+"
+"skipped","Sun Apr 12 19:18:41 UTC 2026","Sun Apr 12 19:18:41 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowAddTaskTest","com.qa.tests.TaskFlowAddTaskTest","tc07_addTask_emptyTitle_showsValidationError","TC-07: Verify that submitting the form with an empty title shows a validation error","Steps:
+ 1. Leave task title blank
+ 2. Fill in other fields (assignee, priority)
+ 3. Click 'Add Task'
+ 4. Verify an error message is displayed (not a success message)
+ 5. Verify the task board count has NOT changed
+"
+"broken","Sun Apr 12 19:18:44 UTC 2026","Sun Apr 12 19:18:44 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowHeaderAndStatsTest","com.qa.tests.TaskFlowHeaderAndStatsTest","setUp","setUp",""
+"skipped","Sun Apr 12 19:18:43 UTC 2026","Sun Apr 12 19:18:43 UTC 2026","1","Surefire suite","Surefire test","com.qa.tests.TaskFlowHeaderAndStatsTest","com.qa.tests.TaskFlowHeaderAndStatsTest","tc03_verifyLoggedInUser","TC-03: Verify the logged-in username is shown in the header user pill","Checks:
  1. The user pill element is rendered
  2. The username text is non-empty (simulating an authenticated session)
 "
-"broken","Sun Apr 12 19:16:31 UTC 2026","Sun Apr 12 19:16:31 UTC 2026","1","Surefire suite","Surefire test","com.qa.tests.TaskFlowAddTaskTest","com.qa.tests.TaskFlowAddTaskTest","openApplication","openApplication",""
-"skipped","Sun Apr 12 19:16:31 UTC 2026","Sun Apr 12 19:16:31 UTC 2026","1","Surefire suite","Surefire test","com.qa.tests.TaskFlowAddTaskTest","com.qa.tests.TaskFlowAddTaskTest","tc11_filterCompleted_showsOnlyCompletedTasks","TC-11: Verify the 'Completed' filter shows only completed tasks","Steps:
+"broken","Sun Apr 12 19:18:44 UTC 2026","Sun Apr 12 19:18:44 UTC 2026","0","Surefire suite","Surefire test","com.example.tests.SampleTests","com.example.tests.SampleTests","setUp","setUp",""
+"skipped","Sun Apr 12 19:18:42 UTC 2026","Sun Apr 12 19:18:42 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowAddTaskTest","com.qa.tests.TaskFlowAddTaskTest","tc11_filterCompleted_showsOnlyCompletedTasks","TC-11: Verify the 'Completed' filter shows only completed tasks","Steps:
  1. Click the 'Completed' filter button
  2. Read the visible task count from the list
  3. Verify it equals the 'Completed' count shown in the stats strip
  4. Click 'All' to reset the filter
 "
-"skipped","Sun Apr 12 19:16:32 UTC 2026","Sun Apr 12 19:16:32 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowHeaderAndStatsTest","com.qa.tests.TaskFlowHeaderAndStatsTest","tc02_verifyHeaderAndLogo","TC-02: Verify the site header is rendered and the logo is visible","Checks:
- 1. The site-header element is present in the DOM
- 2. The logo text contains the product name
-"
-"broken","Sun Apr 12 19:16:31 UTC 2026","Sun Apr 12 19:16:31 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowAddTaskTest","com.qa.tests.TaskFlowAddTaskTest","setUp","setUp",""
-"skipped","Sun Apr 12 19:16:33 UTC 2026","Sun Apr 12 19:16:33 UTC 2026","0","Surefire suite","Surefire test","com.example.tests.SampleTests","com.example.tests.SampleTests","testGreeting","testGreeting",""
-"skipped","Sun Apr 12 19:16:31 UTC 2026","Sun Apr 12 19:16:31 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowAddTaskTest","com.qa.tests.TaskFlowAddTaskTest","tc10_searchInput_filtersTaskList","TC-10: Verify real-time search narrows the visible task list to matching items only","Steps:
- 1. Note the total visible task count (all-filter active)
- 2. Type a search keyword known to match a subset of seeded tasks
- 3. Verify visible task count is less than total
- 4. Verify all visible tasks contain the keyword
- 5. Clear search — verify full list reappears
-"
-"skipped","Sun Apr 12 19:16:33 UTC 2026","Sun Apr 12 19:16:33 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowHeaderAndStatsTest","com.qa.tests.TaskFlowHeaderAndStatsTest","tc05_verifyNavigationLinks","TC-05: Verify all primary navigation links are present in the header","Verifies that Dashboard, My Tasks, and Reports navigation links
-are rendered in the top navigation bar.
-"
-"skipped","Sun Apr 12 19:16:33 UTC 2026","Sun Apr 12 19:16:33 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowHeaderAndStatsTest","com.qa.tests.TaskFlowHeaderAndStatsTest","tc04_verifyStatsStripCounts","TC-04: Verify the stats strip shows non-negative counts for all four KPIs","Reads the four stat-card numbers from the stats strip:
+"skipped","Sun Apr 12 19:18:44 UTC 2026","Sun Apr 12 19:18:44 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowHeaderAndStatsTest","com.qa.tests.TaskFlowHeaderAndStatsTest","tc04_verifyStatsStripCounts","TC-04: Verify the stats strip shows non-negative counts for all four KPIs","Reads the four stat-card numbers from the stats strip:
  1. Total Tasks    — should be > 0 (pre-seeded data exists)
  2. In Progress    — should be >= 0
  3. Completed      — should be >= 0
  4. Overdue        — should be >= 0
 Also verifies: total = in-progress + completed + overdue
 "
-"broken","Sun Apr 12 19:16:29 UTC 2026","Sun Apr 12 19:16:29 UTC 2026","2","Surefire suite","Surefire test","com.qa.tests.TaskFlowActivityFeedTest","com.qa.tests.TaskFlowActivityFeedTest","setUp","setUp",""
-"skipped","Sun Apr 12 19:16:30 UTC 2026","Sun Apr 12 19:16:30 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowAddTaskTest","com.qa.tests.TaskFlowAddTaskTest","tc06_addNewTask_happyPath","TC-06: Verify a new task can be added and appears immediately in the task board","Steps:
- 1. Record the current total task count from the stats strip
- 2. Fill in task title, assignee, and priority
- 3. Click 'Add Task'
- 4. Verify success message is shown and contains the task title
- 5. Verify the task board now shows the new task
- 6. Verify the total task count in the stats strip incremented by 1
+"skipped","Sun Apr 12 19:18:42 UTC 2026","Sun Apr 12 19:18:42 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowAddTaskTest","com.qa.tests.TaskFlowAddTaskTest","tc08_clearForm_resetsFields","TC-08: Verify the Clear button resets all form inputs to their default state","Steps:
+ 1. Type into title, assignee, and description fields
+ 2. Select a priority option
+ 3. Click 'Clear'
+ 4. Verify title field is empty
+ 5. Verify no message banner is visible
 "
-"skipped","Sun Apr 12 19:16:31 UTC 2026","Sun Apr 12 19:16:31 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowAddTaskTest","com.qa.tests.TaskFlowAddTaskTest","tc09_toggleTaskComplete_updatesStats","TC-09: Verify toggling a task to complete updates the stats strip correctly","Steps:
+"broken","Sun Apr 12 19:18:42 UTC 2026","Sun Apr 12 19:18:42 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowAddTaskTest","com.qa.tests.TaskFlowAddTaskTest","setUp","setUp",""
+"broken","Sun Apr 12 19:18:42 UTC 2026","Sun Apr 12 19:18:42 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowAddTaskTest","com.qa.tests.TaskFlowAddTaskTest","openApplication","openApplication",""
+"broken","Sun Apr 12 19:18:41 UTC 2026","Sun Apr 12 19:18:41 UTC 2026","2","Surefire suite","Surefire test","com.qa.tests.TaskFlowActivityFeedTest","com.qa.tests.TaskFlowActivityFeedTest","setUp","setUp",""
+"skipped","Sun Apr 12 19:18:42 UTC 2026","Sun Apr 12 19:18:42 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowAddTaskTest","com.qa.tests.TaskFlowAddTaskTest","tc10_searchInput_filtersTaskList","TC-10: Verify real-time search narrows the visible task list to matching items only","Steps:
+ 1. Note the total visible task count (all-filter active)
+ 2. Type a search keyword known to match a subset of seeded tasks
+ 3. Verify visible task count is less than total
+ 4. Verify all visible tasks contain the keyword
+ 5. Clear search — verify full list reappears
+"
+"skipped","Sun Apr 12 19:18:44 UTC 2026","Sun Apr 12 19:18:44 UTC 2026","0","Surefire suite","Surefire test","com.example.tests.SampleTests","com.example.tests.SampleTests","testPageTitleAndList","testPageTitleAndList",""
+"skipped","Sun Apr 12 19:18:43 UTC 2026","Sun Apr 12 19:18:43 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowHeaderAndStatsTest","com.qa.tests.TaskFlowHeaderAndStatsTest","tc01_verifyPageTitle","TC-01: Verify the browser tab title contains the expected application name","Navigates to the application URL and verifies:
+ 1. Page loads without errors
+ 2. Browser title contains 'TaskFlow Pro'
+"
+"skipped","Sun Apr 12 19:18:44 UTC 2026","Sun Apr 12 19:18:44 UTC 2026","0","Surefire suite","Surefire test","com.example.tests.SampleTests","com.example.tests.SampleTests","testGreeting","testGreeting",""
+"skipped","Sun Apr 12 19:18:42 UTC 2026","Sun Apr 12 19:18:42 UTC 2026","1","Surefire suite","Surefire test","com.qa.tests.TaskFlowAddTaskTest","com.qa.tests.TaskFlowAddTaskTest","tc09_toggleTaskComplete_updatesStats","TC-09: Verify toggling a task to complete updates the stats strip correctly","Steps:
  1. Note initial in-progress and completed counts
  2. Add a new task (defaults to in-progress)
  3. Toggle the new task's checkbox to mark it complete
@@ -51,32 +71,12 @@ Also verifies: total = in-progress + completed + overdue
  6. Toggle the checkbox again (mark incomplete)
  7. Verify counts revert
 "
-"skipped","Sun Apr 12 19:16:31 UTC 2026","Sun Apr 12 19:16:31 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowAddTaskTest","com.qa.tests.TaskFlowAddTaskTest","tc08_clearForm_resetsFields","TC-08: Verify the Clear button resets all form inputs to their default state","Steps:
- 1. Type into title, assignee, and description fields
- 2. Select a priority option
- 3. Click 'Clear'
- 4. Verify title field is empty
- 5. Verify no message banner is visible
-"
-"broken","Sun Apr 12 19:16:33 UTC 2026","Sun Apr 12 19:16:33 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowHeaderAndStatsTest","com.qa.tests.TaskFlowHeaderAndStatsTest","setUp","setUp",""
-"skipped","Sun Apr 12 19:16:32 UTC 2026","Sun Apr 12 19:16:32 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowHeaderAndStatsTest","com.qa.tests.TaskFlowHeaderAndStatsTest","tc01_verifyPageTitle","TC-01: Verify the browser tab title contains the expected application name","Navigates to the application URL and verifies:
- 1. Page loads without errors
- 2. Browser title contains 'TaskFlow Pro'
-"
-"broken","Sun Apr 12 19:16:33 UTC 2026","Sun Apr 12 19:16:33 UTC 2026","0","Surefire suite","Surefire test","com.example.tests.SampleTests","com.example.tests.SampleTests","setUp","setUp",""
-"skipped","Sun Apr 12 19:16:29 UTC 2026","Sun Apr 12 19:16:29 UTC 2026","1","Surefire suite","Surefire test","com.qa.tests.TaskFlowActivityFeedTest","com.qa.tests.TaskFlowActivityFeedTest","tc12_activityFeed_showsPreSeededItems","TC-12: Verify the activity feed renders with at least 3 pre-seeded activity entries","Steps:
- 1. Scroll to the activity feed section
- 2. Verify the section container is visible
- 3. Verify there are at least 3 activity items (matching seeded data)
- 4. Verify the first item's text is non-empty
-"
-"skipped","Sun Apr 12 19:16:30 UTC 2026","Sun Apr 12 19:16:30 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowAddTaskTest","com.qa.tests.TaskFlowAddTaskTest","tc07_addTask_emptyTitle_showsValidationError","TC-07: Verify that submitting the form with an empty title shows a validation error","Steps:
- 1. Leave task title blank
- 2. Fill in other fields (assignee, priority)
+"skipped","Sun Apr 12 19:18:41 UTC 2026","Sun Apr 12 19:18:41 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowAddTaskTest","com.qa.tests.TaskFlowAddTaskTest","tc06_addNewTask_happyPath","TC-06: Verify a new task can be added and appears immediately in the task board","Steps:
+ 1. Record the current total task count from the stats strip
+ 2. Fill in task title, assignee, and priority
  3. Click 'Add Task'
- 4. Verify an error message is displayed (not a success message)
- 5. Verify the task board count has NOT changed
+ 4. Verify success message is shown and contains the task title
+ 5. Verify the task board now shows the new task
+ 6. Verify the total task count in the stats strip incremented by 1
 "
-"skipped","Sun Apr 12 19:16:33 UTC 2026","Sun Apr 12 19:16:33 UTC 2026","0","Surefire suite","Surefire test","com.example.tests.SampleTests","com.example.tests.SampleTests","testPageTitleAndList","testPageTitleAndList",""
-"broken","Sun Apr 12 19:16:33 UTC 2026","Sun Apr 12 19:16:33 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowHeaderAndStatsTest","com.qa.tests.TaskFlowHeaderAndStatsTest","openApplication","openApplication",""
-"broken","Sun Apr 12 19:16:29 UTC 2026","Sun Apr 12 19:16:29 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowActivityFeedTest","com.qa.tests.TaskFlowActivityFeedTest","openApplication","openApplication",""
+"broken","Sun Apr 12 19:18:41 UTC 2026","Sun Apr 12 19:18:41 UTC 2026","0","Surefire suite","Surefire test","com.qa.tests.TaskFlowActivityFeedTest","com.qa.tests.TaskFlowActivityFeedTest","openApplication","openApplication",""

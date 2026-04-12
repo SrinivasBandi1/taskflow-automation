@@ -2,12 +2,10 @@ name: Run Automation Tests
 
 on:
 
-  # ── Triggered by app repo post-deployment ──────────────────────────────────
   repository_dispatch:
     types:
       - run-automation-tests
 
-  # ── Manual trigger from GitHub Actions UI ──────────────────────────────────
   workflow_dispatch:
     inputs:
       app_url:
@@ -32,7 +30,6 @@ on:
         required: false
         default: 'manual'
 
-  # ── Run on PRs to main/develop for quick sanity check ─────────────────────
   pull_request:
     branches:
       - main
@@ -41,18 +38,15 @@ on:
 permissions:
   contents: write
 
-# Prevent redundant parallel runs of the automation suite
 concurrency:
   group: automation-${{ github.event.client_payload.build_number || github.run_number }}
-  cancel-in-progress: false  # Let tests complete — don't cancel mid-run
+  cancel-in-progress: false
 
 jobs:
 
   run-tests:
     name: 🧪 Selenium Test Execution
     runs-on: ubuntu-latest
-
-    # Timeout safeguard: if tests hang, don't burn CI minutes
     timeout-minutes: 30
 
     steps:
@@ -62,72 +56,28 @@ jobs:
         uses: actions/checkout@v4
 
       # ── 2. RESOLVE PARAMETERS ────────────────────────────────────────────
-      # Parameters come from three possible sources:
-      #   a) repository_dispatch payload (client_payload.*)
-      #   b) workflow_dispatch inputs
-      #   c) defaults for pull_request triggers
       - name: Resolve test parameters from dispatch payload or inputs
         id: params
         run: |
-          # Helper: pick first non-empty value from the three sources
           resolve() {
             echo "${1:-${2:-${3}}}"
           }
 
-          APP_URL=$(resolve \
-            "${{ github.event.client_payload.app_url }}" \
-            "${{ github.event.inputs.app_url }}" \
-            "http://localhost:8080")
+          APP_URL=$(resolve "${{ github.event.client_payload.app_url }}" "${{ github.event.inputs.app_url }}" "http://localhost:8080")
+          BROWSER=$(resolve "${{ github.event.client_payload.browser }}" "${{ github.event.inputs.browser }}" "chrome")
+          ENV=$(resolve "${{ github.event.client_payload.env }}" "${{ github.event.inputs.env }}" "staging")
+          BUILD_NUMBER=$(resolve "${{ github.event.client_payload.build_number }}" "${{ github.event.inputs.build_number }}" "${{ github.run_number }}")
+          TRIGGERED_BY=$(resolve "${{ github.event.client_payload.triggered_by }}" "${{ github.actor }}" "unknown")
+          BRANCH=$(resolve "${{ github.event.client_payload.branch }}" "${{ github.ref_name }}" "unknown")
+          COMMIT_SHA=$(resolve "${{ github.event.client_payload.commit_sha }}" "${{ github.sha }}" "unknown")
 
-          BROWSER=$(resolve \
-            "${{ github.event.client_payload.browser }}" \
-            "${{ github.event.inputs.browser }}" \
-            "chrome")
-
-          ENV=$(resolve \
-            "${{ github.event.client_payload.env }}" \
-            "${{ github.event.inputs.env }}" \
-            "staging")
-
-          BUILD_NUMBER=$(resolve \
-            "${{ github.event.client_payload.build_number }}" \
-            "${{ github.event.inputs.build_number }}" \
-            "${{ github.run_number }}")
-
-          TRIGGERED_BY=$(resolve \
-            "${{ github.event.client_payload.triggered_by }}" \
-            "${{ github.actor }}" \
-            "unknown")
-
-          BRANCH=$(resolve \
-            "${{ github.event.client_payload.branch }}" \
-            "${{ github.ref_name }}" \
-            "unknown")
-
-          COMMIT_SHA=$(resolve \
-            "${{ github.event.client_payload.commit_sha }}" \
-            "${{ github.sha }}" \
-            "unknown")
-
-          # Write to GITHUB_OUTPUT for subsequent steps
-          echo "app_url=${APP_URL}"         >> "$GITHUB_OUTPUT"
-          echo "browser=${BROWSER}"         >> "$GITHUB_OUTPUT"
-          echo "env=${ENV}"                 >> "$GITHUB_OUTPUT"
+          echo "app_url=${APP_URL}" >> "$GITHUB_OUTPUT"
+          echo "browser=${BROWSER}" >> "$GITHUB_OUTPUT"
+          echo "env=${ENV}" >> "$GITHUB_OUTPUT"
           echo "build_number=${BUILD_NUMBER}" >> "$GITHUB_OUTPUT"
           echo "triggered_by=${TRIGGERED_BY}" >> "$GITHUB_OUTPUT"
-          echo "branch=${BRANCH}"           >> "$GITHUB_OUTPUT"
-          echo "commit_sha=${COMMIT_SHA}"   >> "$GITHUB_OUTPUT"
-
-          echo "=========================================="
-          echo "  RESOLVED TEST PARAMETERS"
-          echo "  App URL      : ${APP_URL}"
-          echo "  Browser      : ${BROWSER}"
-          echo "  Environment  : ${ENV}"
-          echo "  Build Number : ${BUILD_NUMBER}"
-          echo "  Triggered By : ${TRIGGERED_BY}"
-          echo "  Branch       : ${BRANCH}"
-          echo "  Commit SHA   : ${COMMIT_SHA}"
-          echo "=========================================="
+          echo "branch=${BRANCH}" >> "$GITHUB_OUTPUT"
+          echo "commit_sha=${COMMIT_SHA}" >> "$GITHUB_OUTPUT"
 
       # ── 3. JAVA SETUP ────────────────────────────────────────────────────
       - name: Set up Java 17
@@ -137,10 +87,14 @@ jobs:
           java-version: '17'
           cache: 'maven'
 
+      # ── 🔥 3.1 CRITICAL FIXES (NEW) ──────────────────────────────────────
+      - name: Remove system chromedriver (pre-installed wrong version)
+        run: sudo rm -f /usr/bin/chromedriver || true
+
+      - name: Clear Selenium/WebDriverManager cache
+        run: rm -rf ~/.cache/selenium
+
       # ── 4. BROWSER SETUP ─────────────────────────────────────────────────
-      # Chrome is pre-installed on ubuntu-latest.  Ensure ChromeDriver version
-      # matches via WebDriverManager (handled in Java code), but we pin
-      # the Chrome version to avoid surprise upgrades mid-run.
       - name: Install/verify browser
         run: |
           BROWSER="${{ steps.params.outputs.browser }}"
@@ -157,7 +111,6 @@ jobs:
               echo "✅ Firefox installed"
               ;;
             edge)
-              # Microsoft Edge on ubuntu-latest
               sudo apt-get install -y microsoft-edge-stable || true
               echo "✅ Edge setup attempted"
               ;;
@@ -166,7 +119,6 @@ jobs:
       # ── 5. RUN TESTS ─────────────────────────────────────────────────────
       - name: Run Selenium tests via Maven
         id: test-run
-        # continue-on-error so subsequent steps (reports) always run
         continue-on-error: true
         run: |
           mvn test \
@@ -189,11 +141,9 @@ jobs:
       - name: Generate Allure HTML report
         if: always()
         run: |
-          # Download allure CLI if not cached
           if ! command -v allure &> /dev/null; then
             echo "Installing Allure CLI..."
-            curl -sLo allure.tgz \
-              https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
+            curl -sLo allure.tgz https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
             tar -xzf allure.tgz
             sudo mv allure-2.27.0 /opt/allure
             sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
@@ -202,11 +152,9 @@ jobs:
           allure generate target/allure-results \
             --output target/allure-report \
             --clean \
-            || echo "⚠️ Allure generation failed — results still uploaded"
+            || echo "⚠️ Allure generation failed"
 
-          echo "Allure report generated at: target/allure-report"
-
-      # ── 6.1 PUBLISH ALLURE TO GITHUB PAGES ───────────────────────────────
+      # ── 6.1 PUBLISH ALLURE ───────────────────────────────────────────────
       - name: Publish Allure report to GitHub Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v3
@@ -215,7 +163,7 @@ jobs:
           publish_dir: target/allure-report
           destination_dir: allure-report/${{ steps.params.outputs.build_number }}
 
-      # ── 7. UPLOAD TEST RESULTS ────────────────────────────────────────────
+      # ── 7. UPLOAD ARTIFACTS ──────────────────────────────────────────────
       - name: Upload Allure results (raw)
         uses: actions/upload-artifact@v4
         if: always()
@@ -240,70 +188,13 @@ jobs:
           path: target/surefire-reports/
           retention-days: 30
 
-      # ── 8. PUBLISH TEST RESULTS SUMMARY ───────────────────────────────────
-      # Parses the TestNG XML results and posts a table to the Actions
-      # job summary — visible without downloading any artifact.
+      # ── 8. SUMMARY ───────────────────────────────────────────────────────
       - name: Parse test results and write job summary
         if: always()
         run: |
-          SUMMARY_FILE="$GITHUB_STEP_SUMMARY"
-          ALLURE_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure-report/${{ steps.params.outputs.build_number }}/index.html"
+          echo "## 🧪 Automation Test Results" >> $GITHUB_STEP_SUMMARY
 
-          echo "## 🧪 Automation Test Results" >> "$SUMMARY_FILE"
-          echo "" >> "$SUMMARY_FILE"
-          echo "### Run Context" >> "$SUMMARY_FILE"
-          echo "| Parameter     | Value |" >> "$SUMMARY_FILE"
-          echo "|---------------|-------|" >> "$SUMMARY_FILE"
-          echo "| App URL       | \`${{ steps.params.outputs.app_url }}\` |" >> "$SUMMARY_FILE"
-          echo "| Environment   | \`${{ steps.params.outputs.env }}\` |" >> "$SUMMARY_FILE"
-          echo "| Browser       | \`${{ steps.params.outputs.browser }}\` |" >> "$SUMMARY_FILE"
-          echo "| Build Number  | \`${{ steps.params.outputs.build_number }}\` |" >> "$SUMMARY_FILE"
-          echo "| Triggered By  | \`${{ steps.params.outputs.triggered_by }}\` |" >> "$SUMMARY_FILE"
-          echo "| Branch        | \`${{ steps.params.outputs.branch }}\` |" >> "$SUMMARY_FILE"
-          echo "| Commit SHA    | \`${{ steps.params.outputs.commit_sha }}\` |" >> "$SUMMARY_FILE"
-          echo "" >> "$SUMMARY_FILE"
-
-          # Parse TestNG XML for pass/fail counts
-          RESULTS_DIR="target/surefire-reports"
-          TOTAL=0; PASSED=0; FAILED=0; SKIPPED=0
-
-          if ls "${RESULTS_DIR}"/*.xml 1>/dev/null 2>&1; then
-            for f in "${RESULTS_DIR}"/*.xml; do
-              T=$(grep -oP '(?<=tests=")[^"]*' "$f" || echo 0)
-              E=$(grep -oP '(?<=errors=")[^"]*' "$f" || echo 0)
-              FL=$(grep -oP '(?<=failures=")[^"]*' "$f" || echo 0)
-              SK=$(grep -oP '(?<=skipped=")[^"]*' "$f" || echo 0)
-              TOTAL=$((TOTAL + T))
-              FAILED=$((FAILED + E + FL))
-              SKIPPED=$((SKIPPED + SK))
-            done
-            PASSED=$((TOTAL - FAILED - SKIPPED))
-          fi
-
-          echo "### Test Counts" >> "$SUMMARY_FILE"
-          echo "| Status  | Count |" >> "$SUMMARY_FILE"
-          echo "|---------|-------|" >> "$SUMMARY_FILE"
-          echo "| ✅ Passed  | **${PASSED}** |" >> "$SUMMARY_FILE"
-          echo "| ❌ Failed  | **${FAILED}** |" >> "$SUMMARY_FILE"
-          echo "| ⏭ Skipped | **${SKIPPED}** |" >> "$SUMMARY_FILE"
-          echo "| 📊 Total   | **${TOTAL}** |" >> "$SUMMARY_FILE"
-          echo "" >> "$SUMMARY_FILE"
-
-          if [ "${{ steps.test-run.outcome }}" = "success" ]; then
-            echo "### ✅ Overall: PASSED" >> "$SUMMARY_FILE"
-          else
-            echo "### ❌ Overall: FAILED" >> "$SUMMARY_FILE"
-          fi
-
-          echo "" >> "$SUMMARY_FILE"
-          echo "### 📊 Allure Report" >> "$SUMMARY_FILE"
-          echo "[🔗 View Allure Report](${ALLURE_URL})" >> "$SUMMARY_FILE"
-          echo "" >> "$SUMMARY_FILE"
-          echo "> 📥 Download **allure-report-build-${{ steps.params.outputs.build_number }}** artifact for the full interactive Allure report." >> "$SUMMARY_FILE"
-
-      # ── 9. FAIL THE JOB IF TESTS FAILED ──────────────────────────────────
-      # We used continue-on-error on the test step so that reports always
-      # generate.  Now we re-fail the job if tests actually failed.
+      # ── 9. FINAL STATUS ──────────────────────────────────────────────────
       - name: Fail job if tests failed
         if: steps.test-run.outcome == 'failure'
         run: |

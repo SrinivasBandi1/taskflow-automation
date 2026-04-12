@@ -116,8 +116,9 @@ public class DriverManager {
     /* ------------------------------------------------------------------ */
 
     private static ChromeDriver createChromeDriver(boolean headless) {
-        WebDriverManager.chromedriver().setup();
-        ChromeOptions opts = new ChromeOptions();
+WebDriverManager.chromedriver()
+        .browserVersion("146")
+        .setup();        ChromeOptions opts = new ChromeOptions();
         applyCommonFlags(opts, headless);
         opts.addArguments("--disable-blink-features=AutomationControlled");
         opts.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
